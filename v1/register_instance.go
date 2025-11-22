@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -63,7 +64,9 @@ func (e *EurekaClientV1) RegisterInstance(instance *Instance) error {
 	xmlData = append([]byte(xml.Header), xmlData...)
 	
 	reqUrl := fmt.Sprintf("%s/eureka/apps/%s", e.eurekaHost, instance.App)
-	
+	if e.Debug {
+		log.Printf("RegisterInstance request Url: %v", reqUrl)
+	}
 	req, err := http.NewRequest("POST", reqUrl, bytes.NewBuffer(xmlData))
 	if err != nil {
 		return err
@@ -78,7 +81,7 @@ func (e *EurekaClientV1) RegisterInstance(instance *Instance) error {
 	defer resp.Body.Close()
 	
 	if e.Debug {
-		fmt.Println("Register Response:", resp.Status)
+		log.Println("Register Response:", resp.Status)
 	}
 	return nil
 }

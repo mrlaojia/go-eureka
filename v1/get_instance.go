@@ -3,6 +3,7 @@ package v1
 import (
 	"encoding/xml"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -42,7 +43,7 @@ func (e *EurekaClientV1) GetInstance(i *Instance) (*Instance, error) {
 	}
 	
 	if e.Debug {
-		fmt.Println("EurekaStatus Response:", resp.Status)
+		log.Println("EurekaStatus Response:", resp.Status)
 	}
 	
 	return ins, nil

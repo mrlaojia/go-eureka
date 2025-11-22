@@ -3,6 +3,7 @@ package v1
 import (
 	"encoding/xml"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -21,6 +22,9 @@ import (
 // UNKNOWN: 未知状态，通常出现在错误或未完全启动
 func (e *EurekaClientV1) EurekaStatus() (*EurekaStatus, error) {
 	url := fmt.Sprintf("%s/eureka/status", e.eurekaHost)
+	if e.Debug {
+		log.Printf("EurekaStatus request Url: %v", url)
+	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -43,7 +47,7 @@ func (e *EurekaClientV1) EurekaStatus() (*EurekaStatus, error) {
 	}
 	
 	if e.Debug {
-		fmt.Println("EurekaStatus Response:", resp.Status)
+		log.Println("EurekaStatus Response:", resp.Status)
 	}
 	
 	return status, nil

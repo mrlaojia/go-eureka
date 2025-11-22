@@ -2,6 +2,7 @@ package v1
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -23,7 +24,9 @@ import (
 // UNKNOWN:        状态未知，通常 Eureka 还未同步
 func (e *EurekaClientV1) ChangeStatus(instance *Instance, status string) error {
 	url := fmt.Sprintf("%s/eureka/apps/%s/%s/status?value=%s", e.eurekaHost, instance.App, instance.InstanceID, strings.ToUpper(status))
-	
+	if e.Debug {
+		log.Printf("ChangeStatus request Url: %v", url)
+	}
 	req, _ := http.NewRequest("PUT", url, nil)
 	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Do(req)
@@ -32,7 +35,7 @@ func (e *EurekaClientV1) ChangeStatus(instance *Instance, status string) error {
 	}
 	defer resp.Body.Close()
 	if e.Debug {
-		fmt.Println("Change Status Response:", resp.Status)
+		log.Println("Change Status Response:", resp.Status)
 	}
 	
 	return nil
