@@ -18,10 +18,10 @@ import (
  */
 
 func (e *EurekaClientV1) BuildInstance(appName, appIp string, appPort int) *Instance {
-	
+
 	instanceID := fmt.Sprintf("%s:%v", appIp, appPort)
 	instanceUrl := fmt.Sprintf("http://%v", instanceID)
-	
+
 	now := time.Now().UnixMilli()
 	return &Instance{
 		InstanceID: instanceID,
@@ -62,7 +62,7 @@ func (e *EurekaClientV1) RegisterInstance(instance *Instance) error {
 		return err
 	}
 	xmlData = append([]byte(xml.Header), xmlData...)
-	
+
 	reqUrl := fmt.Sprintf("%s/eureka/apps/%s", e.eurekaHost, instance.App)
 	if e.Debug {
 		log.Printf("RegisterInstance request Url: %v", reqUrl)
@@ -72,16 +72,21 @@ func (e *EurekaClientV1) RegisterInstance(instance *Instance) error {
 		return err
 	}
 	req.Header.Set("Content-Type", "application/xml")
-	
+
 	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-	
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("eureka server returned status %s", resp.Status)
+	}
+
 	if e.Debug {
 		log.Println("Register Response:", resp.Status)
+		log.Printf("Register %v to %v sucess", instance.App, e.eurekaHost)
 	}
 	return nil
 }

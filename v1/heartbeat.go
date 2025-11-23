@@ -27,8 +27,14 @@ func (e *EurekaClientV1) SendHeartbeat(instance *Instance) error {
 		return err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("eureka server returned status %s", resp.Status)
+	}
+
 	if e.Debug {
 		log.Println("Heartbeat Response:", resp.Status)
+		log.Printf("%v send Heartbeat to %v sucess", instance.App, e.eurekaHost)
 	}
 	return nil
 }

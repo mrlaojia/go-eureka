@@ -1,5 +1,16 @@
 [tools]
 go = "1.24.8"
 
-[task]
+[tasks.tidy]
+description = "Run Go Tidy"
+run = "go mod tidy"
+
 # 在这里添加你的任务
+[tasks.build]
+description = "Run Go build"
+run = "go build -o dist/"
+
+[tasks.linux]
+description = "build Go for linux"
+env = { GOOS = "linux", GOARCH = "amd64" }
+run = "go build -o dist/"

@@ -22,29 +22,29 @@ func (e *EurekaClientV1) GetInstance(i *Instance) (*Instance, error) {
 	if e.Debug {
 		fmt.Println("GetInstance url:", url)
 	}
-	
+
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("Accept", "application/xml") // Eureka 默认返回 XML
-	
+
 	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("Eureka returned status %s", resp.Status)
 	}
-	
+
 	ins := &Instance{}
 	if err := xml.NewDecoder(resp.Body).Decode(ins); err != nil {
 		return nil, err
 	}
-	
+
 	if e.Debug {
 		log.Println("EurekaStatus Response:", resp.Status)
+		log.Printf("EurekaStatus: %v", ins)
 	}
-	
 	return ins, nil
 }

@@ -34,9 +34,14 @@ func (e *EurekaClientV1) ChangeStatus(instance *Instance, status string) error {
 		return err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("eureka server returned status %s", resp.Status)
+	}
+
 	if e.Debug {
 		log.Println("Change Status Response:", resp.Status)
 	}
-	
+
 	return nil
 }
