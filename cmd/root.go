@@ -78,7 +78,6 @@ func init() {
 	rootCmd.MarkPersistentFlagRequired("eureka")
 
 	// 添加子命令
-	//rootCmd.AddCommand(version.VersionCmd) // test cmd
 	rootCmd.AddCommand(register.RegisterCmd)
 	rootCmd.AddCommand(remove.RemoveCmd)
 	rootCmd.AddCommand(status.StatusCmd)
