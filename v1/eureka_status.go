@@ -4,8 +4,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"log"
-	"net/http"
-	"time"
 )
 
 /**
@@ -25,13 +23,8 @@ func (e *EurekaClientV1) EurekaStatus() (*EurekaStatus, error) {
 	if e.Debug {
 		log.Printf("EurekaStatus request Url: %v", url)
 	}
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Accept", "application/xml")
-	client := &http.Client{Timeout: 5 * time.Second}
-	resp, err := client.Do(req)
+	
+	resp, err := e.get(url)
 	if err != nil {
 		return nil, err
 	}

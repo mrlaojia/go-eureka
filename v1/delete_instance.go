@@ -3,8 +3,6 @@ package v1
 import (
 	"fmt"
 	"log"
-	"net/http"
-	"time"
 )
 
 /**
@@ -20,9 +18,8 @@ func (e *EurekaClientV1) DeRegister(instance *Instance) error {
 	if e.Debug {
 		log.Printf("Deregister request Url: %v", url)
 	}
-	req, _ := http.NewRequest("DELETE", url, nil)
-	client := &http.Client{Timeout: 10 * time.Second}
-	resp, err := client.Do(req)
+
+	resp, err := e.delete(url)
 	if err != nil {
 		return err
 	}

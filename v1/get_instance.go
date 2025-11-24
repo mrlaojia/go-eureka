@@ -4,9 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"log"
-	"net/http"
 	"strings"
-	"time"
 )
 
 /**
@@ -23,11 +21,7 @@ func (e *EurekaClientV1) GetInstance(i *Instance) (*Instance, error) {
 		fmt.Println("GetInstance url:", url)
 	}
 
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("Accept", "application/xml") // Eureka 默认返回 XML
-
-	client := &http.Client{Timeout: 10 * time.Second}
-	resp, err := client.Do(req)
+	resp, err := e.get(url)
 	if err != nil {
 		return nil, err
 	}

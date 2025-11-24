@@ -1,6 +1,11 @@
 package v1
 
-import "strings"
+import (
+	"io"
+	"net/http"
+	"strings"
+	"time"
+)
 
 /**
 * @Author: jack.walker
@@ -30,4 +35,49 @@ func CreateEurekaClientV1(eurekaHost string) *EurekaClientV1 {
 		eurekaHost: eureka,
 		Debug:      false,
 	}
+}
+
+func (e *EurekaClientV1) get(url string) (*http.Response, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Accept", "application/xml")
+	client := &http.Client{Timeout: 5 * time.Second}
+
+	return client.Do(req)
+}
+
+func (e *EurekaClientV1) put(url string) (*http.Response, error) {
+	req, err := http.NewRequest("PUT", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	client := &http.Client{Timeout: 5 * time.Second}
+
+	return client.Do(req)
+}
+
+func (e *EurekaClientV1) delete(url string) (*http.Response, error) {
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	client := &http.Client{Timeout: 5 * time.Second}
+
+	return client.Do(req)
+}
+
+func (e *EurekaClientV1) post(url string, body io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest("POST", url, body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/xml")
+	client := &http.Client{Timeout: 10 * time.Second}
+
+	return client.Do(req)
 }

@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"log"
-	"net/http"
 	"time"
 )
 
@@ -67,14 +66,8 @@ func (e *EurekaClientV1) RegisterInstance(instance *Instance) error {
 	if e.Debug {
 		log.Printf("RegisterInstance request Url: %v", reqUrl)
 	}
-	req, err := http.NewRequest("POST", reqUrl, bytes.NewBuffer(xmlData))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Content-Type", "application/xml")
 
-	client := &http.Client{Timeout: 10 * time.Second}
-	resp, err := client.Do(req)
+	resp, err := e.post(reqUrl, bytes.NewBuffer(xmlData))
 	if err != nil {
 		return err
 	}
