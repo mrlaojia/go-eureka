@@ -73,7 +73,7 @@ func (e *EurekaClientV1) RegisterInstance(instance *Instance) error {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != 204 {
 		return fmt.Errorf("eureka server returned status %s", resp.Status)
 	}
 
